@@ -1,0 +1,110 @@
+<html lang="en-EN">
+<head>
+    <title></title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        .custom-control-label::before {
+            left: -3.5rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+        }
+        .custom-control-label::after {
+            left: -3.5rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+        }
+        .custom-control-label {
+            font-size: 2rem!important;
+        }
+        #status {
+            font-size: 5rem;
+            margin-top: 5rem;
+        }
+        main {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+<main class="d-flex text-center align-items-center justify-content-center">
+    <div class="text-center">
+        <!-- Default checked -->
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="dogs-released">
+            <label class="custom-control-label" for="dogs-released">Czy psy są spuszczone?</label>
+        </div>
+        <p id="status"></p>
+    </div>
+</main>
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyBca4sOdiHmh-yVBhYSUlhLRjOYff7COZY",
+        authDomain: "homealerts-f5cdb.firebaseapp.com",
+        databaseURL: "https://homealerts-f5cdb.firebaseio.com",
+        projectId: "homealerts-f5cdb",
+        storageBucket: "homealerts-f5cdb.appspot.com",
+        messagingSenderId: "519232835808",
+        appId: "1:519232835808:web:b0cdc197137f6dd4fe0085"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // script
+
+    var database = firebase.database();
+
+    $(function () {
+
+        $('#dogs-released').on('change', function () {
+
+            changeDogsStatus($(this).is(':checked'));
+        });
+
+        var checkboxUpdated = false;
+        var dogsRef = database.ref('flags/dogs');
+        dogsRef.on('value', function(snapshot) {
+            $('#status').text(snapshot.val().released ? 'Tak' : 'Nie');
+            if (!checkboxUpdated) {
+                $('#dogs-released').prop('checked', snapshot.val().released);
+                checkboxUpdated = true;
+            }
+        });
+    });
+
+    function changeDogsStatus(released) {
+        database.ref('flags/dogs').set({
+            released
+        });
+    }
+</script>
+</body>
+</html>
