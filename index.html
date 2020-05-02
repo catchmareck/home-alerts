@@ -86,17 +86,14 @@
 
         $('#dogs-released').on('change', function () {
 
+            console.log('log');
             changeDogsStatus($(this).is(':checked'));
         });
 
-        var checkboxUpdated = false;
         var dogsRef = database.ref('flags/dogs');
         dogsRef.on('value', function(snapshot) {
             $('#status').text(snapshot.val().released ? 'Tak' : 'Nie');
-            if (!checkboxUpdated) {
-                $('#dogs-released').prop('checked', snapshot.val().released);
-                checkboxUpdated = true;
-            }
+            $('#dogs-released').prop('checked', snapshot.val().released);
         });
     });
 
